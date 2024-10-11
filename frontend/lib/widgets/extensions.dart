@@ -2,24 +2,40 @@
 import 'package:flutter/material.dart';
 
 extension WidgetQoL on Widget {
-  Padding padded({double? all, double? left, double? top, double? right, double? bottom, double? horizontal, double? vertical}) {
-    if (all != null) return Padding(padding: EdgeInsets.all(all), child: this);
-    else return Padding( padding: EdgeInsets.fromLTRB((left ?? horizontal) ?? 0, (top ?? vertical) ?? 0,
-        (right ?? horizontal) ?? 0, (bottom ?? vertical) ?? 0), child: this);
+  Padding padded(
+      {double? all, double? left, double? top, double? right, double? bottom, double? horizontal, double? vertical}) {
+    if (all != null)
+      return Padding(padding: EdgeInsets.all(all), child: this);
+    else
+      return Padding(
+          padding: EdgeInsets.fromLTRB(
+              (left ?? horizontal) ?? 0, (top ?? vertical) ?? 0, (right ?? horizontal) ?? 0, (bottom ?? vertical) ?? 0),
+          child: this);
   }
 
   Center centered({double? widthFactor, double? heightFactor}) =>
       Center(widthFactor: widthFactor, heightFactor: heightFactor, child: this);
 
-  Expanded expanded({Key? key,int flex = 1}) {
+  Align aligned(Alignment alignment, {double? widthFactor, double? heightFactor}) =>
+      Align(alignment: alignment, widthFactor: widthFactor, heightFactor: heightFactor, child: this);
+
+  Positioned positioned({double? left, double? top, double? right, double? bottom}) =>
+      Positioned(left: left, top: top, right: right, bottom: bottom, child: this);
+
+  Expanded expanded({Key? key, int flex = 1}) {
     return Expanded(key: key, flex: flex, child: this);
   }
 
   Widget backgroundColor(Color color) => ColoredBox(color: color, child: this);
 
   ConstrainedBox constrained({double? minWidth, double? maxWidth, double? minHeight, double? maxHeight}) {
-    return ConstrainedBox(constraints: BoxConstraints(minWidth: minWidth ?? 0, maxWidth: maxWidth ?? double.infinity,
-        minHeight: minHeight ?? 0, maxHeight: maxHeight ?? double.infinity), child: this);
+    return ConstrainedBox(
+        constraints: BoxConstraints(
+            minWidth: minWidth ?? 0,
+            maxWidth: maxWidth ?? double.infinity,
+            minHeight: minHeight ?? 0,
+            maxHeight: maxHeight ?? double.infinity),
+        child: this);
   }
 }
 
@@ -50,4 +66,16 @@ extension BuildContextQoL on BuildContext {
   Color get errorColor => colorScheme.error;
 
   double get margin => MediaQuery.sizeOf(this).width <= 400 ? 16 : 32;
+
+  void showSnackBar(String message) {
+    final scaffoldMessenger = ScaffoldMessenger.of(this);
+    scaffoldMessenger.showSnackBar(SnackBar(
+      duration: const Duration(milliseconds: 6000),
+      content: Text(message),
+      action: SnackBarAction(
+        label: 'Close',
+        onPressed: scaffoldMessenger.hideCurrentSnackBar,
+      ),
+    ));
+  }
 }

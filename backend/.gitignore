@@ -1,12 +1,11 @@
-# See https://www.dartlang.org/guides/libraries/private-files
-
-# Files and directories created by the Operating System
-.DS_Store
+objectbox
+.local-chrome
+download
+.idea/
 
 # Files and directories created by pub
 .dart_tool/
 .packages
-pubspec.lock
 
 # Files and directories created by dart_frog
 build/
@@ -16,3 +15,25 @@ build/
 coverage/
 
 .set-env.sh
+*.env*
+env.json
+
+/lib/libobjectbox.dylib
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/

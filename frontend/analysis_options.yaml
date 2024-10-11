@@ -8,3 +8,4 @@ linter:
     require_trailing_commas: false
     sort_pub_dependencies: false
     lines_longer_than_80_chars: false
+    always_use_package_imports: false

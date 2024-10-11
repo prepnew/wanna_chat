@@ -8,6 +8,12 @@ The Wanna Chat backdend, built with dart_frog
 
 ## Getting Started
 
+### Install ObjectBox
+```bash
+bash <(curl -s https://raw.githubusercontent.com/objectbox/objectbox-dart/main/install.sh) 
+```
+
+
 ### Install the Dart Frog CLI
 `dart pub global activate dart_frog_cli`
 

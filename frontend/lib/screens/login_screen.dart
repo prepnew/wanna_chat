@@ -43,7 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   onChanged: (_) => setState(() {}),
                 ).padded(all: 16),
                 TextField(
-                  decoration: const InputDecoration(labelText: 'Server URL', hintText: 'Enter the base URL of the WannaChat backend server'),
+                  decoration: const InputDecoration(
+                      labelText: 'Server URL', hintText: 'Enter the base URL of the WannaChat backend server'),
                   controller: _baseUrl,
                 ).padded(all: 16),
                 FilledButton(

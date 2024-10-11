@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:wanna_chat_app/screens/login_screen.dart';
 
-
 void main() {
-  runApp(const MyApp());
+  runApp(const WannaChatApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class WannaChatApp extends StatelessWidget {
+  const WannaChatApp({super.key});
 
   @override
   Widget build(BuildContext context) {

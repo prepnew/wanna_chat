@@ -9,7 +9,6 @@ import 'package:wanna_chat_app/api/chat_api.dart';
 import 'package:wanna_chat_app/widgets/chat_bubble.dart';
 import 'package:wanna_chat_app/widgets/extensions.dart';
 
-
 class ChatScreen extends StatefulWatcherWidget {
   const ChatScreen({required this.conversationId, required this.baseUrl, super.key});
 
@@ -32,7 +31,8 @@ class ChatScreen extends StatefulWatcherWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Wanna chat?!'),
         actions: [
-          if (chatState.isLoading) const SizedBox(width: 24, height: 24, child: CircularProgressIndicator()).padded(right: 16),
+          if (chatState.isLoading)
+            const SizedBox(width: 24, height: 24, child: CircularProgressIndicator()).padded(right: 16),
         ],
       ),
       body: Center(
@@ -84,7 +84,6 @@ class ChatScreen extends StatefulWatcherWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-
         TextField(
           enabled: !state.chat.isLoading,
           onSubmitted: (_) => state.askQuestion(),
@@ -110,15 +109,12 @@ class ChatScreen extends StatefulWatcherWidget {
             hintText: 'Enter your question here',
           ),
         ).expanded(),
-
         const SizedBox(width: 8),
-        // if (state.chat.isLoading) const CircularProgressIndicator().centered(),
-        // if (!state.chat.isLoading)
-          IconButton(
-            icon: Icon(Icons.send, color: state.chat.isLoading ? Colors.grey : Colors.teal),
-            tooltip: 'Ask question',
-            onPressed: state.chat.isLoading ? null : state.askQuestion,
-          ),
+        IconButton(
+          icon: Icon(Icons.send, color: state.chat.isLoading ? Colors.grey : Colors.teal),
+          tooltip: 'Ask question',
+          onPressed: state.chat.isLoading ? null : state.askQuestion,
+        ),
       ],
     );
   }
@@ -135,8 +131,6 @@ class _ChatScreenState extends WatcherState<ChatScreen> {
 
   List<WannaChatMessage> get messages => chat.dataOrNull?.messages ?? [];
 
-  StreamSubscription<String>? _responseSubscription;
-
   late final Disposer onErrorDisposer;
 
   final scrollController = ScrollController();
@@ -146,15 +140,7 @@ class _ChatScreenState extends WatcherState<ChatScreen> {
   void initState() {
     super.initState();
     onErrorDisposer = chat.onError((error, stackTrace, data) {
-      final scaffoldMessenger = ScaffoldMessenger.of(context);
-      scaffoldMessenger.showSnackBar(SnackBar(
-        duration: const Duration(milliseconds: 6000),
-        content: Text(error.toString()),
-        action: SnackBarAction(
-          label: 'Close',
-          onPressed: scaffoldMessenger.hideCurrentSnackBar,
-        ),
-      ));
+      context.showSnackBar(error.toString());
     });
     restoreConversation();
   }
@@ -182,33 +168,17 @@ class _ChatScreenState extends WatcherState<ChatScreen> {
     chat.data = chat.data.withMessages([question, aiLoadingMessage]);
     chat.toLoading();
 
-    //askQuestionComplete(question);
-    askQuestionStreamed(question);
+    _sendMessage(question);
   }
 
-  void askQuestionComplete(WannaChatMessage question) {
+  void _sendMessage(WannaChatMessage question) {
     Future<ChatConversation> sendMessage() async {
       final aiMessage = await api.sendMessage(question);
       textController.clear();
-      return chat.data.appendLastAIMessage(aiMessage.message);
+      return chat.data.updateLastAIMessage(aiMessage);
     }
 
     chat.updateDataAsync(() => sendMessage());
-  }
-
-  void askQuestionStreamed(WannaChatMessage question) {
-    final response = api.sendMessageStreamed(question);
-    _responseSubscription?.cancel();
-    _responseSubscription = response.listen((response) {
-      if (textController.text.isNotEmpty) textController.clear();
-      chat.toLoading(data: chat.data.appendLastAIMessage(response));
-    }, onError: (Object error) {
-      _responseSubscription?.cancel();
-      chat.toError(error: error);
-    }, onDone: () {
-      _responseSubscription?.cancel();
-      chat.toData();
-    });
   }
 
   @override
